@@ -41,11 +41,17 @@ class Tree {
 public:
 	Tree() : head{nullptr} {}
 
+	bool hasNextMatch() {
+		if (head == nullptr) return false;
+		return head->match.isOver();
+	}
+
 	Match& getNextMatch() {
 		return getDeepestNode(head, height(head)).first->match;
 	}
 
 	void constructTree(vector<Player&> players);
 };
+
 
 #endif
