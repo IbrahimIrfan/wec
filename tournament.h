@@ -36,6 +36,10 @@ public:
     // Gets winner, or ""
     virtual string getWinner();
     virtual string getLoser();
+
+    bool isCompetitor(string p) {
+        return p == p1 || p == p2;
+    }
 };
 
 class Tournament {
