@@ -1,2 +1,2 @@
 tourn: *
-	g++ -std=c++14 -Wall -o tournament *.cc *.h
+	g++ -std=c++14 -Wall -o tournament *.cc
