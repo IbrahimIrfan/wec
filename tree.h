@@ -19,7 +19,7 @@ public:
 	TreeNode *right;
 	TreeNode *parent;
 
-	TreeNode(Match *match, TreeNode* left=nullptr, TreeNode* right=nullptr, TreeNode* parent=nullptr) : match{match}, left{left}, right{right}, parent{nullptr}  {}
+	TreeNode(Match *match, TreeNode* left=nullptr, TreeNode* right=nullptr, TreeNode* parent=nullptr) : match{match}, left{left}, right{right}, parent{parent}  {}
 
 	bool isLeaf() {
 		return left == nullptr && right == nullptr;
@@ -115,7 +115,7 @@ public:
 		// final not yet set
 		if (head->match == nullptr) return true;
 		// partial final
-		return head->match->isOver();
+		return !head->match->isOver();
 	}
 
 	Match& getNextMatch() {
@@ -142,9 +142,10 @@ public:
 			if (parentMatch == nullptr) {
 				std::cout << "parent was null" << std::endl;
 				// start a partial match with dummy player
-				parentMatch = new Match(winner, Player("", 0), matchId++, matchNode->getFirstTo());
+				node->parent->match = new Match(winner, Player("", 0), matchId++, matchNode->getFirstTo());
 			} else {
-				parentMatch->setP2(winner);
+                std::cout << "AHHHHHHHHH REEE" << std::endl;
+				node->parent->match->setP2(winner);
 			}
 		}
 	}

@@ -46,9 +46,9 @@ int main(int argc, char *argv[]) {
 		Tournament* tournament;
 
 		switch (tournamentType) {
-			// case 1:
-			// 	tournament = new SingleElim();
-			// 	break;
+			case 1:
+			    tournament = new SingleElim();
+			    break;
 			// case 2:
 			// 	tournament = new DoubleElim();
 			// 	break;
