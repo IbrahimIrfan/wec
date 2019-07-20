@@ -27,8 +27,8 @@ public:
 
 	void print(int heightOfNode) {
 		if (heightOfNode == 0) {
-			if (match == nullptr) {
-				cout << match << endl;
+			if (match != nullptr) {
+				cout << *match << endl;
 			} else {
 				cout << endl;
 			}
@@ -221,7 +221,7 @@ public:
 			return;
 		}
 
-		int treeHeight = height(getDeepestNode(head, 0));
+		int treeHeight = height(head)-1;
 
 		head->print(treeHeight);
 	}
