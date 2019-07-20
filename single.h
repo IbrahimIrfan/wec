@@ -27,7 +27,7 @@ public:
     }
 
     void addGameScore(int matchId, int score1, int score2) override {
-		tournTree.addGameScore(int matchId, int score1, int score2);
+		tournTree.addGameScore(matchId, score1, score2);
 	}
 
     void createTournament() override {
