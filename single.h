@@ -48,6 +48,10 @@ public:
 
     void writeToFile(string fname) override;
     void readToFile(string fname) override;
+
+    void print() override {
+        tournTree.print();
+    }
 };
 
 #endif

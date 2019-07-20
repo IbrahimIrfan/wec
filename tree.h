@@ -9,6 +9,8 @@
 
 using namespace std;
 
+const int nSpacesPerHeight = 10;
+
 class TreeNode {
 public:
 	Match *match;
@@ -16,6 +18,40 @@ public:
 	TreeNode *right;
 
 	TreeNode(Match *match) : match{match}, left{nullptr}, right{nullptr}  {}
+
+	void print(int heightOfNode) {
+		if (heightOfNode == 0) {
+			if (match == nullptr) {
+				cout << match << endl;
+			} else {
+				cout << endl;
+			}
+		}
+
+		if (left != nullptr) {
+			left->print(heightOfNode-1);
+		} else {
+			int pow2 = 1 << (heightOfNode-1);
+			for (int i = 0; i < pow2; ++i) {
+				cout << endl;
+			}
+		}
+
+		cout << string(nSpacesPerHeight*heightOfNode, ' ');
+		if (match != nullptr) {
+			cout << *match;
+		}
+		cout << endl;
+
+		if (right != nullptr) {
+			right->print(heightOfNode-1);
+		} else {
+			int pow2 = 1 << (heightOfNode-1);
+			for (int i = 0; i < pow2; ++i) {
+				cout << endl;
+			}
+		}
+	}
 };
 
 class Tree {
@@ -126,6 +162,16 @@ public:
 	}
 
 	void constructTree(vector<Player> players);
+
+	void print() {
+		if (head == nullptr) {
+			return;
+		}
+
+		int height = height(getDeepestNode(head, 0));
+
+		head->print();
+	}
 };
 
 
