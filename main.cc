@@ -13,20 +13,8 @@ using namespace std;
 const string seperator = "---------------------------------------";
 
 int main(int argc, char *argv[]) {
-<<<<<<< HEAD
 	while (true) {
 		cout << "Welcome to Yeet" << endl;
-
-		cout << "Please enter how many games you would like the players to win." << endl;
-		int numRounds;
-		cin >> numRounds;
-
-		if (numRounds < 1) {
-			cout << "Invalid number of games to win entered!" << endl;
-			continue;
-		}
-
-
 
 		cout << seperator << endl;
 
@@ -42,6 +30,17 @@ int main(int argc, char *argv[]) {
 		int tournamentType;
 		cin >> tournamentType;
 
+
+		cout << "Matches will be first to 'X' games:" << endl;
+		int numRounds;
+		cin >> numRounds;
+
+		if (numRounds < 1) {
+			cout << "Invalid number of games to win entered!" << endl;
+			continue;
+		}
+
+
 		unique_ptr<Tournament> tournament;
 
 		switch (tournamentType) {
@@ -52,7 +51,7 @@ int main(int argc, char *argv[]) {
 			// 	tournament = make_unique<DoubleElim>(); 
 			// 	break;
 			case 3: 
-				tournament = make_unique<RoundRobin>(); 
+				tournament = make_unique<RoundRobin>(numRounds);
 				break;
 			// case 4:
 			// 	tournament = make_unique<SwissFormat>(); 
@@ -139,14 +138,19 @@ int main(int argc, char *argv[]) {
 
 				cin >> p1 >> s1 >> p2 >> s2;
 
-				int matchId = tournament->getNextMatch().getMatchId();
+                Match& match = tournament->getNextMatch();
+                int matchId = match.getMatchId();
 
 				if (p1 == tournament->getNextMatch().getP1().name && 
 					p2 == tournament->getNextMatch().getP2().name) {
 					tournament->addGameScore(matchId, s1, s2);
+
+                    cout << endl << match;
 				} else if (p1 == tournament->getNextMatch().getP2().name && 
 						   p2 == tournament->getNextMatch().getP1().name) {
 					tournament->addGameScore(matchId, s2, s1);
+
+                    cout << endl << match;
 				} else {
 					cout << "Invalid players entered!" << endl;
 				}
