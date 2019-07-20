@@ -29,21 +29,23 @@ int main(int argc, char *argv[]) {
 		unique_ptr<Tournament> tournament;
 
 		switch (tournamentType) {
-			case 1:	
-				tournament = make_unique<SingleElim>(); 
-				break;
-			case 2: 
-				tournament = make_unique<DoubleElim>(); 
-				break;
-			case 3: 
-				tournament = make_unique<RoundRobin>(); 
-				break;
-			case 4:
-				tournament = make_unique<SwissFormat>(); 
-				break;
+			// case 1:	
+			// 	tournament = make_unique<SingleElim>(); 
+			// 	break;
+			// case 2: 
+			// 	tournament = make_unique<DoubleElim>(); 
+			// 	break;
+			// case 3: 
+			// 	tournament = make_unique<RoundRobin>(); 
+			// 	break;
+			// case 4:
+			// 	tournament = make_unique<SwissFormat>(); 
+			// 	break;
 			case 5:
 				cout << "Bye!" << endl;
 				return 0;
+			case 21:
+				tournament = make_unique<Test>();
 		}
 
 		if (tournament == nullptr) {
@@ -67,7 +69,6 @@ int main(int argc, char *argv[]) {
 		while(competitors.empty()) {
 			cout << "Please enter the name of your competitors, and then enter "
 				"\"complete\" when you are done." << endl;
-			vector competitors;
 
 			string nameInput;
 			cin >> nameInput;
@@ -76,25 +77,27 @@ int main(int argc, char *argv[]) {
 				competitors.emplace_back(nameInput);
 			}
 
-			if (competitors.empty()) {
-				cout << "Please enter one or more competitors" << endl;
+			if (competitors.size() <= 1) {
+				cout << "Please enter two or more competitors. There are currently " <<
+					competitors.size() << "competitors entered.";
 			}
 		}
-
 		tournament->createFromPlayers(competitors, seeded);
+
+		cout << seperator << endl;
 
 		cout << "A the of input commands are: " << endl;
 		// cout << "add $(player) - adds a competitor to the tournament" << endl;
-		cout << "remove $(player) - removes the competitor from the 
-			tournament" << endl;
+		cout << "remove $(player) - removes the competitor from the "
+			"tournament" << endl;
 		cout << "match - displays the next match" << endl;
 		cout << "playmatch $(player1) $(score1) $(player2) $(score2) -"
 			"plays the next match using scores" << endl;
 		cout << "output - displays the entire tournament" << endl;
 		cout << "quit - exits the tournament" << endl;
 
-		cout << "Note for the commands, $(...) indicates an input, you do 
-			not need to enter the $ char, the ( char, or the ) char." << endl;
+		cout << "Note for the commands, $(...) indicates an input, you do "
+			"not need to enter the $ char, the ( char, or the ) char." << endl;
 
 		cout << "Beginning tournament" << endl; 
 
@@ -117,11 +120,11 @@ int main(int argc, char *argv[]) {
 
 				int matchId = tournament->getNextMatch()->getMatchId();
 
-				if (p1 == tournament->getNextMatch()->getP1() && 
-					p2 == tournament->getNextMatch()->getP2()) {
+				if (p1 == tournament->getNextMatch().getP1() && 
+					p2 == tournament->getNextMatch().getP2()) {
 					tournament->addGameScore(matchId, s1, s2);
-				} else if (p1 == tournament->getNextMatch()->getP2() && 
-						   p2 == tournament->getNextMatch()->getP1()) {
+				} else if (p1 == tournament->getNextMatch().getP2() && 
+						   p2 == tournament->getNextMatch().getP1()) {
 					tournament->addGameScore(matchId, s2, s1);
 				} else {
 					cout << "Invalid players entered!" << endl;
@@ -149,4 +152,5 @@ int main(int argc, char *argv[]) {
     //     });
 
     // delete t;
+    return 0;
 }

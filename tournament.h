@@ -177,6 +177,8 @@ public:
 
     virtual void writeToFile(string fname) = 0;
     virtual void readToFile(string fname) = 0;
+
+    virtual void print() = 0;
 };
 
 #endif 
