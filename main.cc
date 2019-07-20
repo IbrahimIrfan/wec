@@ -1,4 +1,7 @@
 #include <memory>
+#include <vector>
+#include <iostream>
+#include <string>
 
 #include "tournament.h"
 #include "roundrobin.h"
@@ -11,6 +14,17 @@ int main(int argc, char *argv[]) {
 	while (true) {
 		cout << "Welcome to Yeet" << endl;
 
+		cout << "Please enter how many games you would like the players to win." << endl;
+		int numRounds;
+		cin >> numRounds;
+
+		if (numRounds < 1) {
+			cout << "Invalid number of games to win entered!" << endl;
+			continue;
+		}
+
+
+
 		cout << seperator << endl;
 
 		cout << "Please enter which tournament style you would like." << endl;
@@ -20,7 +34,7 @@ int main(int argc, char *argv[]) {
 		cout << "Swiss Format,       Enter: 4" << endl;
 		cout << "Exit program,       Enter: 5" << endl;
 
-		cout < seperator << endl;
+		cout << seperator << endl;
 		
 		int tournamentType;
 		cin >> tournamentType;
@@ -34,23 +48,21 @@ int main(int argc, char *argv[]) {
 			// case 2: 
 			// 	tournament = make_unique<DoubleElim>(); 
 			// 	break;
-			// case 3: 
-			// 	tournament = make_unique<RoundRobin>(); 
-			// 	break;
+			case 3: 
+				tournament = make_unique<RoundRobin>(); 
+				break;
 			// case 4:
 			// 	tournament = make_unique<SwissFormat>(); 
 			// 	break;
 			case 5:
 				cout << "Bye!" << endl;
 				return 0;
-			case 21:
-				tournament = make_unique<Test>();
 		}
 
 		if (tournament == nullptr) {
 			cout << "Invalid tournament type!" << endl;
 			continue;
-		}
+		} 
 
 
 		cout << "Would you like the tournament to be seeded? Enter: yes/no" << endl; 
@@ -63,17 +75,19 @@ int main(int argc, char *argv[]) {
 			seededInput = true;
 		}
 
-		vector competitors;
+		vector<string> competitors;
 
 		while(competitors.empty()) {
 			cout << "Please enter the name of your competitors, and then enter "
 				"\"complete\" when you are done." << endl;
 
 			string nameInput;
-			cin >> nameInput;
+			getline(cin, nameInput);
+			getline(cin, nameInput);
 
 			while(nameInput != "complete") {
 				competitors.emplace_back(nameInput);
+				getline(cin, nameInput);
 			}
 
 			if (competitors.size() <= 1) {
@@ -87,13 +101,16 @@ int main(int argc, char *argv[]) {
 
 		cout << "A the of input commands are: " << endl;
 		// cout << "add $(player) - adds a competitor to the tournament" << endl;
-		cout << "remove $(player) - removes the competitor from the "
-			"tournament" << endl;
-		cout << "match - displays the next match" << endl;
-		cout << "playmatch $(player1) $(score1) $(player2) $(score2) -"
+		cout << "remove $(player)                                    - "
+			"removes the competitor from the tournament" << endl;
+		cout << "match                                               - "
+			"displays the next match" << endl;
+		cout << "playmatch $(player1) $(score1) $(player2) $(score2) - "
 			"plays the next match using scores" << endl;
-		cout << "output - displays the entire tournament" << endl;
-		cout << "quit - exits the tournament" << endl;
+		cout << "output                                              - "
+			"displays the entire tournament" << endl;
+		cout << "quit                                                - "
+			"exits the tournament" << endl;
 
 		cout << "Note for the commands, $(...) indicates an input, you do "
 			"not need to enter the $ char, the ( char, or the ) char." << endl;
@@ -112,18 +129,20 @@ int main(int argc, char *argv[]) {
 			} else if (command == "match") {
 				cout << tournament->getNextMatch() << endl;
 			} else if (command == "playmatch") {
-				string p1, p2;
-				int s1, s2;
+				string p1;
+				string p2;
+				int s1;
+				int s2;
 
 				cin >> p1 >> s1 >> p2 >> s2;
 
-				int matchId = tournament->getNextMatch()->getMatchId();
+				int matchId = tournament->getNextMatch().getMatchId();
 
-				if (p1 == tournament->getNextMatch().getP1() && 
-					p2 == tournament->getNextMatch().getP2()) {
+				if (p1 == tournament->getNextMatch().getP1().name && 
+					p2 == tournament->getNextMatch().getP2().name) {
 					tournament->addGameScore(matchId, s1, s2);
-				} else if (p1 == tournament->getNextMatch().getP2() && 
-						   p2 == tournament->getNextMatch().getP1()) {
+				} else if (p1 == tournament->getNextMatch().getP2().name && 
+						   p2 == tournament->getNextMatch().getP1().name) {
 					tournament->addGameScore(matchId, s2, s1);
 				} else {
 					cout << "Invalid players entered!" << endl;

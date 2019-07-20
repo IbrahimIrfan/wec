@@ -80,6 +80,12 @@ public:
 
     void writeToFile(string fname) {}
     void readToFile(string fname) {}
+
+    void print() override {
+        for (auto& match : matches) {
+            cout << match << endl;
+        }
+    }
 };
 
 #endif
