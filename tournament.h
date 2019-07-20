@@ -122,6 +122,7 @@ public:
     void setP1(Player p) { p1 = p; }
     void setP2(Player p) { p2 = p; }
 
+    int getFirstTo() { return firstTo; }
     Player getP1() { return p1; }
     Player getP2() { return p2; }
     Player getPlayer(int p) {

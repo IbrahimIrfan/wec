@@ -20,6 +20,7 @@ public:
 
 class Tree {
 	TreeNode *head;
+	int matchId = 0;
 
 	TreeNode* getDeepestNode(TreeNode* root, int level) {
 		if (root == nullptr || level == 1) {
@@ -74,8 +75,8 @@ class Tree {
 			return parent->match;
 		}
 
-		Match* leftFind = findByMatchId(matchId, node->left, node);
-		Match* rightFind = findByMatchId(matchId, node->right, node);
+		Match* leftFind = getMatchParent(matchId, node->left, node);
+		Match* rightFind = getMatchParent(matchId, node->right, node);
 
 		if (!leftFind) {
 			return leftFind;
@@ -97,7 +98,7 @@ public:
 	}
 
 	Match& getNextMatch() {
-		return getDeepestNode(head, height(head))->match;
+		return *(getDeepestNode(head, height(head))->match);
 	}
 
     void addGameScore(int matchId, int score1, int score2) {
@@ -111,20 +112,21 @@ public:
 			Player winner = matchNode->getPlayer(matchNode->winner());
 			
 			// tourney is done, don't update any parent
-			if (matchNode == head) {
+			if (head != nullptr && matchNode == head->match) {
 				return;
 			}
 
 			Match *parentMatch = getMatchParent(matchId);
 			if (parentMatch == nullptr) {
 				// start a partial match with dummy player
-				parentMatch = new Match(winner, Player("", 0));
+				parentMatch = new Match(winner, Player("", 0), matchId++, matchNode->getFirstTo());
 			} else {
 				parentMatch->setP2(winner);
 			}
 		}
 	}
 
+	// use the static matchId
 	void constructTree(vector<Player> players);
 };
 
