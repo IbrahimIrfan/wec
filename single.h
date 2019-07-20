@@ -3,12 +3,13 @@
 
 #include "tournament.h"
 #include "tree.h"
+#include<vector>
 
 using namespace std;
 
 class SingleElim : public Tournament {
 	Tree tournTree;
-	vector<Player&> players;
+	vector<Player> players;
 public:
     SingleElim();
 
@@ -34,7 +35,7 @@ public:
 		tournTree.constructTree(players);
 	}
 
-	bool hasNextMatch override {
+	bool hasNextMatch() override {
 		return tournTree.hasNextMatch();
 	}
 
