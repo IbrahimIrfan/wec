@@ -210,6 +210,10 @@ public:
 
 		head->print(treeHeight);
 	}
+
+	Match* getFinal() {
+		return head->match;
+	}
 };
 
 

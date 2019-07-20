@@ -54,8 +54,11 @@ public:
 	}
 
     vector<pair<int, string>> getWinners() override {
-		//TODO
-		return vector<pair<int, string>>();
+		Match* finalG = tournTree.getFinal();
+		vector<pair<int, string>> v;
+		v.emplace_back(make_pair(1, finalG->getPlayer(finalG->winner()).name));
+		v.emplace_back(make_pair(2, finalG->getPlayer(finalG->loser()).name));
+		return v;
 	}
 
     Match& getNextMatch() override {
