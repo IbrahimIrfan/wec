@@ -181,6 +181,7 @@ int main(int argc, char *argv[]) {
 			} else {
 				cout << "Unknown command!" << endl;
 			}
+            cout << separator << endl;
 		}
 
 		cout << "Tournament has ended. The end result is:" << endl;
