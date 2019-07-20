@@ -9,10 +9,9 @@
 using namespace std;
 
 struct Player {
-    Player(string n, int s) : name{n}, seed{s}, wins{0} {}
+    Player(string n, int s) : name{n}, seed{s} {}
     string name;
     int seed;
-    int wins;
 
     bool operator<(Player& other) const{
         return seed < other.seed;
@@ -145,14 +144,18 @@ ostream& operator<<(ostream& os, Match& m) {
               << m.matchId
               << ": "
               << m.p1.name
+              << " "
+              << m.p1wins()
               << " vs. "
-              << m.p2.name
-              << endl;
+              << m.p2wins()
+              << " "
+              << m.p2.name;
 }
 
 class Tournament {
+    int firstTo;
 public:
-    Tournament() {};
+    Tournament(int firstTo = 1): firstTo{firstTo} {};
     virtual ~Tournament() {};
 
     void createFromPlayers(vector<string> name, bool seeded=true) {
@@ -169,7 +172,11 @@ public:
         createTournament();
     }
 
-    virtual vector<string> getWinners() = 0;
+    int getFirstTo() {
+        return firstTo;
+    }
+
+    virtual vector<pair<int, string>> getWinners() = 0;
 
     virtual void addCompetitor(string name, int seed=rand()) = 0;
     virtual void removeCompetitor(string name) = 0;
@@ -177,6 +184,8 @@ public:
     virtual void createTournament() = 0;
 
     virtual bool isOver() = 0;
+    virtual bool inProgress() = 0;
+    virtual void reset() = 0;
     virtual bool hasNextMatch() = 0;
     virtual Match& getNextMatch() = 0;
 

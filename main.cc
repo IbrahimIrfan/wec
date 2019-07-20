@@ -2,15 +2,18 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 
 #include "tournament.h"
 #include "roundrobin.h"
+#include "single.h"
 
 using namespace std;
 
 const string seperator = "---------------------------------------";
 
 int main(int argc, char *argv[]) {
+<<<<<<< HEAD
 	while (true) {
 		cout << "Welcome to Yeet" << endl;
 
@@ -160,15 +163,4 @@ int main(int argc, char *argv[]) {
 		cout << "Tournament has ended. The end result is:" << endl;
 		tournament->print();
 	}
-    // Tournament* t = new RoundRobin();
-
-    // t->createFromPlayers(vector<string>{
-    //         "Ibrahim",
-    //         "Callum",
-    //         "Max",
-    //         "Bob"
-    //     });
-
-    // delete t;
-    return 0;
 }
