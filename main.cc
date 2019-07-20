@@ -11,13 +11,14 @@
 
 using namespace std;
 
-const string seperator = "---------------------------------------";
+const string separator = "---------------------------------------";
 
 int main(int argc, char *argv[]) {
 	while (true) {
+        cout << separator << endl;
 		cout << "Welcome to Yeet" << endl;
 
-		cout << seperator << endl;
+		cout << separator << endl;
 
 		cout << "Please enter which tournament style you would like." << endl;
 		cout << "Single Elimination, Enter: 1" << endl;
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 		cout << "Swiss Format,       Enter: 4" << endl;
 		cout << "Exit program,       Enter: 5" << endl;
 
-		cout << seperator << endl;
+		cout << separator << endl;
 
 		int tournamentType;
 		cin >> tournamentType;
@@ -42,20 +43,20 @@ int main(int argc, char *argv[]) {
 		}
 
 
-		unique_ptr<Tournament> tournament;
+		Tournament* tournament;
 
 		switch (tournamentType) {
 			// case 1:
-			// 	tournament = make_unique<SingleElim>();
+			// 	tournament = new SingleElim();
 			// 	break;
 			// case 2:
-			// 	tournament = make_unique<DoubleElim>();
+			// 	tournament = new DoubleElim();
 			// 	break;
-			case 3:
-				tournament = make_unique<RoundRobin>(numRounds);
+			case 3: 
+				tournament = new RoundRobin(numRounds);
 				break;
 			case 4:
-				tournament = make_unique<Swiss>(numRounds);
+				tournament = new Swiss(numRounds);
 				break;
 			case 5:
 				cout << "Bye!" << endl;
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]) {
 		}
 
 
-		cout << "Would you like the tournament to be seeded? Enter: yes/no" << endl;
+		cout << "Will the list of competitors be in order of seeding? Enter: yes/no" << endl; 
 		string seededInput;
 		cin >> seededInput;
 
@@ -76,7 +77,14 @@ int main(int argc, char *argv[]) {
 
 		if (seededInput == "yes") {
 			seededInput = true;
-		}
+		} else {
+            cout << "Do you want to do a round robin to determine seeding? Enter: yes/no" << endl; 
+            cin >> seededInput;
+
+            if (seededInput == "yes") {
+                tournament = new RRSeededTournament(tournament, numRounds);
+            }
+        }
 
 		vector<string> competitors;
 
@@ -100,7 +108,7 @@ int main(int argc, char *argv[]) {
 		}
 		tournament->createFromPlayers(competitors, seeded);
 
-		cout << seperator << endl;
+		cout << separator << endl;
 
 		cout << "A the of input commands are: " << endl;
 		// cout << "add $(player) - adds a competitor to the tournament" << endl;
@@ -142,19 +150,29 @@ int main(int argc, char *argv[]) {
                 Match& match = tournament->getNextMatch();
                 int matchId = match.getMatchId();
 
-				if (p1 == tournament->getNextMatch().getP1().name &&
+                bool outputMatchScore = false;
+
+				if (p1 == tournament->getNextMatch().getP1().name && 
 					p2 == tournament->getNextMatch().getP2().name) {
 					tournament->addGameScore(matchId, s1, s2);
 
-                    cout << endl << match;
-				} else if (p1 == tournament->getNextMatch().getP2().name &&
+                    outputMatchScore = true;
+				} else if (p1 == tournament->getNextMatch().getP2().name && 
 						   p2 == tournament->getNextMatch().getP1().name) {
 					tournament->addGameScore(matchId, s2, s1);
 
-                    cout << endl << match;
+                    outputMatchScore = true;
 				} else {
 					cout << "Invalid players entered!" << endl;
 				}
+                
+                if (outputMatchScore) {
+                    cout << endl;
+                    if (match.isOver()) {
+                        cout << "Match " << matchId << " is over. " << match.getPlayer(match.winner()).name << " wins!" << endl;
+                    }
+                    cout << match << endl << endl;
+                }
 			} else if (command == "output") {
 				tournament->print();
 			} else if (command == "quit") {
@@ -167,5 +185,11 @@ int main(int argc, char *argv[]) {
 
 		cout << "Tournament has ended. The end result is:" << endl;
 		tournament->print();
+        cout << endl << "Final standings:" << endl;;
+
+        for (auto p : tournament->getWinners()) {
+            cout << p.first << ". " << p.second << endl;
+        }
+        cout << endl;
 	}
 }
