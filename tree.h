@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const int nSpacesPerHeight = 10;
+const int nSpacesPerHeight = 20;
 
 class TreeNode {
 public:
@@ -47,7 +47,9 @@ public:
 		cout << string(nSpacesPerHeight*heightOfNode, ' ');
 		if (match != nullptr) {
 			cout << *match;
-		}
+		} else {
+            cout << "TBD";
+        }
 		cout << endl;
 
 		if (right != nullptr) {
