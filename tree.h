@@ -32,6 +32,7 @@ public:
 			} else {
 				cout << endl;
 			}
+            return;
 		}
 
 		if (left != nullptr) {
@@ -149,7 +150,6 @@ public:
 				// start a partial match with dummy player
 				node->parent->match = new Match(winner, Player("", 0), matchId++, matchNode->getFirstTo());
 			} else {
-                std::cout << "AHHHHHHHHH REEE" << std::endl;
 				node->parent->match->setP2(winner);
 			}
 		}
@@ -197,23 +197,6 @@ public:
 		int numNodes = 2*matches.size() - 1;
 		head = createTreeOfSize(numNodes);
 		setLeaves(matches);
-	}
-
-	void printTree(TreeNode* cur) {
-		if (cur == nullptr) {
-			return;
-		}
-
-		if (cur->match == nullptr) {
-			std::cout << "empty" << std::endl;
-		} else {
-			std::cout << *cur->match << std::endl;
-		}
-
-		std::cout << "going left" << std::endl;
-		printTree(cur->left);
-		std::cout << "back up, going right" << std::endl;
-		printTree(cur->right);
 	}
 
 	void print() {
