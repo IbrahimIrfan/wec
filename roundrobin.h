@@ -15,7 +15,7 @@ class RoundRobin : public Tournament {
     bool progress;
     bool over;
 public:
-    RoundRobin(): progress{false} {}
+    RoundRobin(int firstTo = 1): Tournament{firstTo}, progress{false} {}
     virtual ~RoundRobin() {}
 
     void addCompetitor(string name, int seed) {
@@ -27,16 +27,13 @@ public:
         for (auto it = players.begin(); it != players.end(); ++it) {
             if (it->name == name) {
                 players.erase(it);
-
-
-
                 return;
             }
         }
     }
     void addGameScore(int matchId, int score1, int score2) {
         if (inProgress()) {
-            matches[matchId].addGameScore(score1, score2);
+            matches[matchId - 1].addGameScore(score1, score2);
 
             if (!hasNextMatch()) {
                 over = true;
@@ -52,7 +49,7 @@ public:
     void createTournament() {
         if (!inProgress() && !isOver()) {
             progress = true;
-            int matchId = 0;
+            int matchId = 1;
 
             matches.clear();
             sort(players.begin(), players.end());
@@ -61,7 +58,8 @@ public:
                     matches.emplace_back(
                             players[i],
                             players[j],
-                            matchId++);
+                            matchId++,
+                            getFirstTo());
                 }
             }
         }
@@ -129,6 +127,11 @@ public:
     void writeToFile(string fname) {}
     void readToFile(string fname) {}
 
+    void print() override {
+        for (auto& match : matches) {
+            cout << match << endl;
+        }
+    }
     friend ostream& operator<<(ostream&, RoundRobin&);
 };
 

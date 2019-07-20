@@ -140,21 +140,26 @@ public:
 };
 
 ostream& operator<<(ostream& os, Match& m) {
-    return os << "Match "
-              << m.matchId
-              << ": "
-              << m.p1.name
-              << " "
-              << m.p1wins()
-              << " vs. "
-              << m.p2wins()
-              << " "
-              << m.p2.name;
+    os << "Match "
+       << m.matchId
+       << ": "
+       << m.p1.name
+       << " "
+       << m.p1wins()
+       << " vs. "
+       << m.p2wins()
+       << " "
+       << m.p2.name;
+    for (Game g : m.games) {
+        os << endl << "  - Game: " << g.score1 << " - " << g.score2;
+    }
+    return os;
 }
 
 class Tournament {
+    int firstTo;
 public:
-    Tournament() {};
+    Tournament(int firstTo = 1): firstTo{firstTo} {};
     virtual ~Tournament() {};
 
     void createFromPlayers(vector<string> name, bool seeded=true) {
@@ -169,6 +174,10 @@ public:
         }
 
         createTournament();
+    }
+
+    int getFirstTo() {
+        return firstTo;
     }
 
     virtual vector<pair<int, string>> getWinners() = 0;
@@ -186,6 +195,8 @@ public:
 
     virtual void writeToFile(string fname) = 0;
     virtual void readToFile(string fname) = 0;
+
+    virtual void print() = 0;
 };
 
 #endif 
