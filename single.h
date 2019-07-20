@@ -27,12 +27,15 @@ public:
     }
 
     void addGameScore(int matchId, int score1, int score2) override {
-		// add the score to match
-		// check if the match is done, if so, propogate to parent node
+		tournTree.addGameScore(int matchId, int score1, int score2);
 	}
 
     void createTournament() override {
 		tournTree.constructTree(players);
+	}
+
+	bool isOver() override {
+        return !tournTree.hasNextMatch();
 	}
 
 	bool hasNextMatch() override {
