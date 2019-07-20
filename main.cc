@@ -7,17 +7,18 @@
 #include "tournament.h"
 #include "roundrobin.h"
 #include "single.h"
+#include "swiss.h"
 
 using namespace std;
 
-const string seperator = "---------------------------------------";
+const string separator = "---------------------------------------";
 
 int main(int argc, char *argv[]) {
 	while (true) {
         cout << separator << endl;
 		cout << "Welcome to Yeet" << endl;
 
-		cout << seperator << endl;
+		cout << separator << endl;
 
 		cout << "Please enter which tournament style you would like." << endl;
 		cout << "Single Elimination, Enter: 1" << endl;
@@ -26,8 +27,8 @@ int main(int argc, char *argv[]) {
 		cout << "Swiss Format,       Enter: 4" << endl;
 		cout << "Exit program,       Enter: 5" << endl;
 
-		cout << seperator << endl;
-		
+		cout << separator << endl;
+
 		int tournamentType;
 		cin >> tournamentType;
 
@@ -45,18 +46,18 @@ int main(int argc, char *argv[]) {
 		Tournament* tournament;
 
 		switch (tournamentType) {
-			// case 1:	
-			// 	tournament = make_unique<SingleElim>(); 
+			// case 1:
+			// 	tournament = new SingleElim();
 			// 	break;
-			// case 2: 
-			// 	tournament = make_unique<DoubleElim>(); 
+			// case 2:
+			// 	tournament = new DoubleElim();
 			// 	break;
 			case 3: 
 				tournament = new RoundRobin(numRounds);
 				break;
-			// case 4:
-			// 	tournament = make_unique<SwissFormat>(); 
-			// 	break;
+			case 4:
+				tournament = new Swiss(numRounds);
+				break;
 			case 5:
 				cout << "Bye!" << endl;
 				return 0;
@@ -65,7 +66,7 @@ int main(int argc, char *argv[]) {
 		if (tournament == nullptr) {
 			cout << "Invalid tournament type!" << endl;
 			continue;
-		} 
+		}
 
 
 		cout << "Will the list of competitors be in order of seeding? Enter: yes/no" << endl; 
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
 		}
 		tournament->createFromPlayers(competitors, seeded);
 
-		cout << seperator << endl;
+		cout << separator << endl;
 
 		cout << "A the of input commands are: " << endl;
 		// cout << "add $(player) - adds a competitor to the tournament" << endl;
@@ -125,7 +126,7 @@ int main(int argc, char *argv[]) {
 		cout << "Note for the commands, $(...) indicates an input, you do "
 			"not need to enter the $ char, the ( char, or the ) char." << endl;
 
-		cout << "Beginning tournament" << endl; 
+		cout << "Beginning tournament" << endl;
 
 		while (tournament->hasNextMatch()) {
 			string command;

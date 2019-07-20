@@ -142,6 +142,10 @@ public:
     RRSeededTournament(Tournament* other, int numRounds=1) : rr{new RoundRobin(numRounds)}, t{other} {
         t->reset();
     }
+    ~RRSeededTournament() {
+        delete t;
+        delete rr;
+    }
 
     virtual vector<pair<int, string>> getWinners() {
         return t->getWinners();
