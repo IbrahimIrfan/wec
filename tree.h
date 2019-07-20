@@ -121,9 +121,8 @@ public:
 	Match& getNextMatch() {
 		int h = height(head);
 		TreeNode* curDeepest = nullptr;
-		while (curDeepest == nullptr) {
-			std::cout << "hi" << std::endl;
-			curDeepest = getDeepestNode(head, --h);
+		while (h >= 1 && curDeepest == nullptr) {
+			curDeepest = getDeepestNode(head, h--);
 		}
 		return *curDeepest->match;
 	}
