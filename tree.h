@@ -119,7 +119,13 @@ public:
 	}
 
 	Match& getNextMatch() {
-		return *(getDeepestNode(head, height(head))->match);
+		int h = height(head);
+		TreeNode* curDeepest = nullptr;
+		while (curDeepest == nullptr) {
+			std::cout << "hi" << std::endl;
+			curDeepest = getDeepestNode(head, --h);
+		}
+		return *curDeepest->match;
 	}
 
     void addGameScore(int matchId, int score1, int score2) {
