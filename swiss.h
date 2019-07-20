@@ -21,6 +21,21 @@ public:
 
     vector<pair<int, string>> getWinners() {
         vector<pair<int, string>> winners;
+        vector<pair<int, string>> finalScores;
+
+        for (pair<string, int> score : scores) {
+            finalScores.push_back(make_pair(score.second, score.first));
+        }
+
+        sort(finalScores.rbegin(), finalScores.rend(),
+        [](pair<int, string> a, pair<int, string> b) -> bool {
+            return a.first < b.first;
+        });
+
+        for (int i = 0; i < finalScores.size(); i++) {
+            winners.push_back(make_pair(i + 1, finalScores[i].second));
+        }
+
         return winners;
     }
 
@@ -48,7 +63,7 @@ public:
 
     void createTournament() override {
         int numRounds = ceil(log2(players.size()));
-        sort(players.rbegin(), players.rend());
+        sort(players.begin(), players.end());
         givenBye[players[players.size()-1].name] = true;
         scores[players[players.size()-1].name]++;
 
