@@ -11,9 +11,9 @@ using namespace std;
 
 class TreeNode {
 public:
+	Match match;
 	TreeNode *left;
 	TreeNode *right;
-	Match match;
 
 	TreeNode(Match match) : match{match}, left{nullptr}, right{nullptr}  {}
 };
@@ -41,11 +41,17 @@ class Tree {
 public:
 	Tree() : head{nullptr} {}
 
-	Match& getNextMatch() {
-		return getDeepestNode(head, height(head)).first->match;
+	bool hasNextMatch() {
+		if (head == nullptr) return false;
+		return head->match.isOver();
 	}
 
-	void constructTree(vector<Player&> players);
+	Match& getNextMatch() {
+		return getDeepestNode(head, height(head))->match;
+	}
+
+	void constructTree(vector<Player> players);
 };
+
 
 #endif
