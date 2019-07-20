@@ -140,16 +140,20 @@ public:
 };
 
 ostream& operator<<(ostream& os, Match& m) {
-    return os << "Match "
-              << m.matchId
-              << ": "
-              << m.p1.name
-              << " "
-              << m.p1wins()
-              << " vs. "
-              << m.p2wins()
-              << " "
-              << m.p2.name;
+    os << "Match "
+       << m.matchId
+       << ": "
+       << m.p1.name
+       << " "
+       << m.p1wins()
+       << " vs. "
+       << m.p2wins()
+       << " "
+       << m.p2.name;
+    for (Game g : m.games) {
+        os << endl << "  - Game: " << g.score1 << " - " << g.score2;
+    }
+    return os;
 }
 
 class Tournament {

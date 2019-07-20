@@ -181,9 +181,9 @@ public:
 			return;
 		}
 
-		int height = height(getDeepestNode(head, 0));
+		int treeHeight = height(getDeepestNode(head, 0));
 
-		head->print();
+		head->print(treeHeight);
 	}
 };
 

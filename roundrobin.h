@@ -33,7 +33,7 @@ public:
     }
     void addGameScore(int matchId, int score1, int score2) {
         if (inProgress()) {
-            matches[matchId].addGameScore(score1, score2);
+            matches[matchId - 1].addGameScore(score1, score2);
 
             if (!hasNextMatch()) {
                 over = true;
@@ -49,7 +49,7 @@ public:
     void createTournament() {
         if (!inProgress() && !isOver()) {
             progress = true;
-            int matchId = 0;
+            int matchId = 1;
 
             matches.clear();
             sort(players.begin(), players.end());
@@ -127,13 +127,11 @@ public:
     void writeToFile(string fname) {}
     void readToFile(string fname) {}
 
-<<<<<<< HEAD
     void print() override {
         for (auto& match : matches) {
             cout << match << endl;
         }
     }
-=======
     friend ostream& operator<<(ostream&, RoundRobin&);
 };
 
@@ -201,7 +199,6 @@ public:
 
     virtual void writeToFile(string fname) {};
     virtual void readToFile(string fname) {};
->>>>>>> f338687b647d0e28b86e68300bf085de640e0a69
 };
 
 #endif
