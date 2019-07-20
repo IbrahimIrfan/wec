@@ -7,6 +7,7 @@
 #include "tournament.h"
 #include "roundrobin.h"
 #include "single.h"
+#include "swiss.h"
 
 using namespace std;
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 		cout << "Exit program,       Enter: 5" << endl;
 
 		cout << seperator << endl;
-		
+
 		int tournamentType;
 		cin >> tournamentType;
 
@@ -44,18 +45,18 @@ int main(int argc, char *argv[]) {
 		unique_ptr<Tournament> tournament;
 
 		switch (tournamentType) {
-			// case 1:	
-			// 	tournament = make_unique<SingleElim>(); 
+			// case 1:
+			// 	tournament = make_unique<SingleElim>();
 			// 	break;
-			// case 2: 
-			// 	tournament = make_unique<DoubleElim>(); 
+			// case 2:
+			// 	tournament = make_unique<DoubleElim>();
 			// 	break;
-			case 3: 
+			case 3:
 				tournament = make_unique<RoundRobin>(numRounds);
 				break;
-			// case 4:
-			// 	tournament = make_unique<SwissFormat>(); 
-			// 	break;
+			case 4:
+				tournament = make_unique<Swiss>(numRounds);
+				break;
 			case 5:
 				cout << "Bye!" << endl;
 				return 0;
@@ -64,10 +65,10 @@ int main(int argc, char *argv[]) {
 		if (tournament == nullptr) {
 			cout << "Invalid tournament type!" << endl;
 			continue;
-		} 
+		}
 
 
-		cout << "Would you like the tournament to be seeded? Enter: yes/no" << endl; 
+		cout << "Would you like the tournament to be seeded? Enter: yes/no" << endl;
 		string seededInput;
 		cin >> seededInput;
 
@@ -117,7 +118,7 @@ int main(int argc, char *argv[]) {
 		cout << "Note for the commands, $(...) indicates an input, you do "
 			"not need to enter the $ char, the ( char, or the ) char." << endl;
 
-		cout << "Beginning tournament" << endl; 
+		cout << "Beginning tournament" << endl;
 
 		while (tournament->hasNextMatch()) {
 			string command;
@@ -141,12 +142,12 @@ int main(int argc, char *argv[]) {
                 Match& match = tournament->getNextMatch();
                 int matchId = match.getMatchId();
 
-				if (p1 == tournament->getNextMatch().getP1().name && 
+				if (p1 == tournament->getNextMatch().getP1().name &&
 					p2 == tournament->getNextMatch().getP2().name) {
 					tournament->addGameScore(matchId, s1, s2);
 
                     cout << endl << match;
-				} else if (p1 == tournament->getNextMatch().getP2().name && 
+				} else if (p1 == tournament->getNextMatch().getP2().name &&
 						   p2 == tournament->getNextMatch().getP1().name) {
 					tournament->addGameScore(matchId, s2, s1);
 

@@ -16,13 +16,21 @@ class Swiss : public Tournament {
     unordered_map<string, bool> givenBye;
 
 public:
-    Swiss();
+    Swiss(int firstTo = 1): Tournament{firstTo} {}
+    ~Swiss() {}
+
+    vector<pair<int, string>> getWinners() {
+        vector<pair<int, string>> winners;
+        return winners;
+    }
 
     void addCompetitor(string name, int seed=rand()) override {
 		players.emplace_back(name, seed);
         scores[name] = 0;
         givenBye[name] = false;
 	}
+
+    void removeCompetitor(string name) {};
 
     void addGameScore(int matchId, int score1, int score2) override {
         shared_ptr<Match> m = matches[matchId];
@@ -45,7 +53,7 @@ public:
         scores[players[players.size()-1].name]++;
 
         for (int i = 0; i < players.size() / 2; i++) {
-            matches.push_back(make_shared<Match>(players[i], players[players.size()/2 + i]));
+            matches.push_back(make_shared<Match>(players[i], players[players.size()/2 + i], i));
         }
 
         for (int i = 1; i < numRounds; i++) {
@@ -83,7 +91,8 @@ public:
                 for (int j = 0; j < players.size()/2; j++) {
                     matches[i+j] = make_shared<Match>(
                         players[playerScores[j].second],
-                        players[playerScores[players.size()/2 + j].second]
+                        players[playerScores[players.size()/2 + j].second],
+                        i+j
                     );
                 }
             }
@@ -94,8 +103,28 @@ public:
         }
 	}
 
-    void writeToFile(string fname) override;
-    void readToFile(string fname) override;
+    bool isOver() override {
+        return false;
+    }
+
+    bool inProgress() override {
+        return true;
+    }
+
+    void reset() override {
+
+    }
+
+    void print() override {
+        for (shared_ptr<Match> m : matches) {
+            if (m != nullptr) {
+                cout << *m;
+            }
+        }
+    }
+
+    void writeToFile(string fname) override {};
+    void readToFile(string fname) override {};
 };
 
 #endif
