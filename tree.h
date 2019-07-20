@@ -4,6 +4,7 @@
 #include<string>
 #include<vector>
 #include<algorithm>
+#include <math.h>
 
 #include "tournament.h"
 
@@ -127,7 +128,17 @@ public:
 	}
 
 	// use the static matchId
-	void constructTree(vector<Player> players);
+	void constructTree(vector<Player> players) {
+		// TODO: we are assuming power of 2
+		//
+		// highest seeds play lowest seeds
+		vector<Match> matches;	
+		int numPlayers = (int)players.size();
+		
+		for (int i = 0; i < numPlayers / 2; i++) {
+			matches.emplace_back(players[i], players[numPlayers - i], matchId++);
+		} 
+	}
 };
 
 
