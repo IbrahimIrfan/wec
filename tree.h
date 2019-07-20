@@ -11,11 +11,11 @@ using namespace std;
 
 class TreeNode {
 public:
-	Match match;
+	Match *match;
 	TreeNode *left;
 	TreeNode *right;
 
-	TreeNode(Match match) : match{match}, left{nullptr}, right{nullptr}  {}
+	TreeNode(Match *match) : match{match}, left{nullptr}, right{nullptr}  {}
 };
 
 class Tree {
@@ -38,16 +38,91 @@ class Tree {
 		return 1 + max(height(root->left), height(root->right));
 	}
 
+	Match* findByMatchId(int matchId) {
+		return findByMatchId(matchId, head);
+	}
+
+	Match* findByMatchId(int matchId, TreeNode* node) {
+		if (node == nullptr) {
+			return nullptr;
+		}
+		
+		if (node->match != nullptr && node->match->getMatchId() == matchId) {
+			return node->match;
+		}
+
+		Match* leftFind = findByMatchId(matchId, node->left);
+		Match* rightFind = findByMatchId(matchId, node->right);
+
+		if (!leftFind) {
+			return leftFind;
+		} else {
+			return rightFind;
+		}
+	}
+
+	Match* getMatchParent(int matchId) {
+		return getMatchParent(matchId, head, nullptr);
+	}
+
+	Match* getMatchParent(int matchId, TreeNode* node, TreeNode* parent) {
+		if (node == nullptr) {
+			return nullptr;
+		}
+
+		if (node->match != nullptr && node->match->getMatchId() == matchId) {
+			return parent->match;
+		}
+
+		Match* leftFind = findByMatchId(matchId, node->left, node);
+		Match* rightFind = findByMatchId(matchId, node->right, node);
+
+		if (!leftFind) {
+			return leftFind;
+		} else {
+			return rightFind;
+		}
+	}
+
 public:
 	Tree() : head{nullptr} {}
 
 	bool hasNextMatch() {
+		// dead tree
 		if (head == nullptr) return false;
-		return head->match.isOver();
+		// final not yet set
+		if (head->match == nullptr) return true;
+		// partial final
+		return head->match->isOver();
 	}
 
 	Match& getNextMatch() {
 		return getDeepestNode(head, height(head))->match;
+	}
+
+    void addGameScore(int matchId, int score1, int score2) {
+		Match* matchNode = findByMatchId(matchId);
+		if (!matchNode) {
+			throw "Match not found";
+		}
+
+		matchNode->addGameScore(score1, score2);
+		if (matchNode->isOver()){
+			Player winner = matchNode->getPlayer(matchNode->winner());
+			
+			// tourney is done, don't update any parent
+			if (matchNode == head) {
+				return;
+			}
+
+			Match *parentMatch = getMatchParent(matchId);
+			if (parentMatch == nullptr) {
+				// start a partial match with dummy player
+				parentMatch = new Match(winner, Player("", 0));
+			} else {
+				parentMatch->setP2(winner);
+			}
+		}
 	}
 
 	void constructTree(vector<Player> players);

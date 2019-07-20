@@ -2,7 +2,6 @@
 
 #include "tournament.h"
 #include "roundrobin.h"
-#include "single.h"
 
 using namespace std;
 
