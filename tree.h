@@ -17,8 +17,13 @@ public:
 	Match *match;
 	TreeNode *left;
 	TreeNode *right;
+	TreeNode *parent;
 
-	TreeNode(Match *match) : match{match}, left{nullptr}, right{nullptr}  {}
+	TreeNode(Match *match, TreeNode* left=nullptr, TreeNode* right=nullptr, TreeNode* parent=nullptr) : match{match}, left{left}, right{right}, parent{nullptr}  {}
+
+	bool isLeaf() {
+		return left == nullptr && right == nullptr;
+	}
 
 	void print(int heightOfNode) {
 		if (heightOfNode == 0) {
@@ -58,9 +63,11 @@ public:
 class Tree {
 	TreeNode *head;
 	int matchId = 0;
+	int curMatch = 0;
 
 	TreeNode* getDeepestNode(TreeNode* root, int level) {
-		if (root == nullptr || level == 1) {
+		if (root == nullptr) return nullptr;
+		if (level == 1 && root->match != nullptr && !root->match->isOver()) {
 			return root;
 		}
 		
@@ -76,46 +83,23 @@ class Tree {
 		return 1 + max(height(root->left), height(root->right));
 	}
 
-	Match* findByMatchId(int matchId) {
+	TreeNode* findByMatchId(int matchId) {
 		return findByMatchId(matchId, head);
 	}
 
-	Match* findByMatchId(int matchId, TreeNode* node) {
+	TreeNode* findByMatchId(int matchId, TreeNode* node) {
 		if (node == nullptr) {
 			return nullptr;
 		}
 		
 		if (node->match != nullptr && node->match->getMatchId() == matchId) {
-			return node->match;
+			return node;
 		}
 
-		Match* leftFind = findByMatchId(matchId, node->left);
-		Match* rightFind = findByMatchId(matchId, node->right);
+		TreeNode* leftFind = findByMatchId(matchId, node->left);
+		TreeNode* rightFind = findByMatchId(matchId, node->right);
 
-		if (!leftFind) {
-			return leftFind;
-		} else {
-			return rightFind;
-		}
-	}
-
-	Match* getMatchParent(int matchId) {
-		return getMatchParent(matchId, head, nullptr);
-	}
-
-	Match* getMatchParent(int matchId, TreeNode* node, TreeNode* parent) {
-		if (node == nullptr) {
-			return nullptr;
-		}
-
-		if (node->match != nullptr && node->match->getMatchId() == matchId) {
-			return parent->match;
-		}
-
-		Match* leftFind = getMatchParent(matchId, node->left, node);
-		Match* rightFind = getMatchParent(matchId, node->right, node);
-
-		if (!leftFind) {
+		if (leftFind != nullptr) {
 			return leftFind;
 		} else {
 			return rightFind;
@@ -139,9 +123,10 @@ public:
 	}
 
     void addGameScore(int matchId, int score1, int score2) {
-		Match* matchNode = findByMatchId(matchId);
-		if (!matchNode) {
-			throw "Match not found";
+		TreeNode* node = findByMatchId(matchId);
+		Match* matchNode = node->match;
+		if (matchNode == nullptr) {
+			std::cout << matchId << std::endl;
 		}
 
 		matchNode->addGameScore(score1, score2);
@@ -153,8 +138,9 @@ public:
 				return;
 			}
 
-			Match *parentMatch = getMatchParent(matchId);
+			Match *parentMatch = node->parent->match;
 			if (parentMatch == nullptr) {
+				std::cout << "parent was null" << std::endl;
 				// start a partial match with dummy player
 				parentMatch = new Match(winner, Player("", 0), matchId++, matchNode->getFirstTo());
 			} else {
@@ -163,17 +149,65 @@ public:
 		}
 	}
 
-	// use the static matchId
+	TreeNode* createTreeOfSize(int numNodes, TreeNode* parent = nullptr) {
+		if (numNodes == 0) {
+			return nullptr;
+		}
+		TreeNode* thisNode = new TreeNode(nullptr, nullptr, nullptr, parent);
+		TreeNode* leftNode = createTreeOfSize((numNodes - 1) / 2, thisNode);
+		TreeNode* rightNode = createTreeOfSize((numNodes - 1) / 2, thisNode);
+		thisNode->left = leftNode;
+		thisNode->right = rightNode;
+		return thisNode;
+	}
+
+	void setLeaves(vector<Match> matches) {
+		setLeaves(matches, head);
+	}
+
+	void setLeaves(vector<Match> matches, TreeNode* curNode) {
+		if (curNode == nullptr) {
+			return;
+		}
+
+		if (curNode->isLeaf()) {
+			Match m = matches[curMatch++];
+			curNode->match = new Match(m);
+		}
+
+		setLeaves(matches, curNode->left);
+		setLeaves(matches, curNode->right);
+	}
+
 	void constructTree(vector<Player> players) {
-		// TODO: we are assuming power of 2
-		//
 		// highest seeds play lowest seeds
 		vector<Match> matches;	
 		int numPlayers = (int)players.size();
 		
 		for (int i = 0; i < numPlayers / 2; i++) {
-			matches.emplace_back(players[i], players[numPlayers - i], matchId++);
+			matches.emplace_back(players[i], players[numPlayers - i - 1], matchId++);
+		} 
+
+		int numNodes = 2*matches.size() - 1;
+		head = createTreeOfSize(numNodes);
+		setLeaves(matches);
+	}
+
+	void printTree(TreeNode* cur) {
+		if (cur == nullptr) {
+			return;
 		}
+
+		if (cur->match == nullptr) {
+			std::cout << "empty" << std::endl;
+		} else {
+			std::cout << *cur->match << std::endl;
+		}
+
+		std::cout << "going left" << std::endl;
+		printTree(cur->left);
+		std::cout << "back up, going right" << std::endl;
+		printTree(cur->right);
 	}
 
 	void print() {

@@ -139,8 +139,12 @@ class RRSeededTournament : public Tournament {
     RoundRobin* rr;
     Tournament* t;
 public:
-    RRSeededTournament(Tournament* other) : rr{new RoundRobin}, t{other} {
+    RRSeededTournament(Tournament* other, int numRounds=1) : rr{new RoundRobin(numRounds)}, t{other} {
         t->reset();
+    }
+    ~RRSeededTournament() {
+        delete t;
+        delete rr;
     }
 
     virtual vector<pair<int, string>> getWinners() {
@@ -195,6 +199,14 @@ public:
             return rr->getNextMatch();
         }
         return t->getNextMatch();
+    }
+
+    void print() {
+        if (rr->inProgress()) {
+            rr->print();
+        } else {
+            t->print();
+        }
     }
 
     virtual void writeToFile(string fname) {};

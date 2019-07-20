@@ -4,6 +4,7 @@
 #include "tournament.h"
 #include "tree.h"
 #include<vector>
+#include<iostream>
 
 using namespace std;
 
@@ -11,7 +12,8 @@ class SingleElim : public Tournament {
 	Tree tournTree;
 	vector<Player> players;
 public:
-    SingleElim();
+    SingleElim() {}
+    ~SingleElim() {}
 
     void addCompetitor(string name, int seed=rand()) override {
 		players.emplace_back(name, seed);
@@ -38,16 +40,30 @@ public:
         return !tournTree.hasNextMatch();
 	}
 
+	bool inProgress() override {
+        return tournTree.hasNextMatch();
+	}
+
 	bool hasNextMatch() override {
 		return tournTree.hasNextMatch();
+	}
+
+	void reset() override {
+		//TODO
+		return;
+	}
+
+    vector<pair<int, string>> getWinners() override {
+		//TODO
+		return vector<pair<int, string>>();
 	}
 
     Match& getNextMatch() override {
 		return tournTree.getNextMatch();
 	}
 
-    void writeToFile(string fname) override;
-    void readToFile(string fname) override;
+    void writeToFile(string fname) override {}
+    void readToFile(string fname) override {}
 
     void print() override {
         tournTree.print();
