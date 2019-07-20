@@ -153,8 +153,9 @@ ostream& operator<<(ostream& os, Match& m) {
 }
 
 class Tournament {
+    int firstTo;
 public:
-    Tournament() {};
+    Tournament(int firstTo = 1): firstTo{firstTo} {};
     virtual ~Tournament() {};
 
     void createFromPlayers(vector<string> name, bool seeded=true) {
@@ -169,6 +170,10 @@ public:
         }
 
         createTournament();
+    }
+
+    int getFirstTo() {
+        return firstTo;
     }
 
     virtual vector<pair<int, string>> getWinners() = 0;

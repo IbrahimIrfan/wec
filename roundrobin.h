@@ -15,7 +15,7 @@ class RoundRobin : public Tournament {
     bool progress;
     bool over;
 public:
-    RoundRobin(): progress{false} {}
+    RoundRobin(int firstTo = 1): Tournament{firstTo}, progress{false} {}
     virtual ~RoundRobin() {}
 
     void addCompetitor(string name, int seed) {
@@ -27,9 +27,6 @@ public:
         for (auto it = players.begin(); it != players.end(); ++it) {
             if (it->name == name) {
                 players.erase(it);
-
-
-
                 return;
             }
         }
@@ -61,7 +58,8 @@ public:
                     matches.emplace_back(
                             players[i],
                             players[j],
-                            matchId++);
+                            matchId++,
+                            getFirstTo());
                 }
             }
         }
